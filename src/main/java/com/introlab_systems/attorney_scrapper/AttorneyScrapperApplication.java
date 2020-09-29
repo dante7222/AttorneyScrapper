@@ -1,3 +1,4 @@
+
 package com.introlab_systems.attorney_scrapper;
 
 import org.springframework.boot.SpringApplication;
