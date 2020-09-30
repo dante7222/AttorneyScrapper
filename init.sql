@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `firm`
 (
     `id`      BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    `firm`    VARCHAR(255) NOT NULL,
+    `name`    VARCHAR(255) NOT NULL,
     `address` VARCHAR(255) NOT NULL
 )
     ENGINE = InnoDB
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `firm`
 CREATE TABLE IF NOT EXISTS `section`
 (
     `id`   BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL
+    `name` VARCHAR(255) UNIQUE NOT NULL
 )
     ENGINE = InnoDB
     AUTO_INCREMENT = 1;
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `section`
 CREATE TABLE IF NOT EXISTS `category`
 (
     `id`   BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL
+    `name` VARCHAR(255) UNIQUE NOT NULL
 )
     ENGINE = InnoDB
     AUTO_INCREMENT = 1;
@@ -27,11 +27,10 @@ CREATE TABLE IF NOT EXISTS `attorney`
 (
     `id`                BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
     `full_name`         VARCHAR(255) NOT NULL,
-    `phone`             INT(10)      NOT NULL,
-    `email`             VARCHAR(255) NOT NULL,
-    `education`         VARCHAR(255) NOT NULL,
-    `firm_id`           BIGINT(20)   NOT NULL,
-    `website`           VARCHAR(255),
+    `phone`             VARCHAR(30)  NOT NULL,
+    `education`         VARCHAR(255),
+    `firm_id`           BIGINT(20)  ,
+    `website`           VARCHAR(255) NOT NULL,
     `profile_photo_url` VARCHAR(255) NOT NULL,
     `profile_url`       VARCHAR(255) NOT NULL,
 
