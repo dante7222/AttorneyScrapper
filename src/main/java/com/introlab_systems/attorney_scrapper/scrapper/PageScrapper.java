@@ -1,4 +1,4 @@
-package com.introlab_systems.attorney_scrapper.scratcher;
+package com.introlab_systems.attorney_scrapper.scrapper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,9 +11,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class PageScrapper {
-    private static final String url = "https://intus.austinbar.org/directory/default.aspx?page=";
+    private static final String URL = "https://intus.austinbar.org/directory/default.aspx?page=";
+    private static final String DOMAIN = "https://intus.austinbar.org/";
 
-    public List<String> getPageAttorneysURI(int pageNumber) {
+    public List<String> getPageAttorneysURL(int pageNumber) {
         Document document = null;
         try {
             document = Jsoup.connect("https://intus.austinbar.org/directory/default.aspx?page=" + pageNumber).get();
@@ -25,7 +26,8 @@ public class PageScrapper {
         List<String> attorneysURIList = container.first()
                 .getElementsByClass("span3 col-sm-6 col-md-3 directory-search-item")
                 .stream()
-                .map(element -> element.getElementsByTag("a").attr("href"))
+                .map(element -> element.getElementsByTag("a").attr("href")
+                .replaceFirst("/", DOMAIN))
                 .collect(Collectors.toList());
 
         return attorneysURIList;

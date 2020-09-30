@@ -1,67 +1,48 @@
-CREATE TABLE IF NOT EXISTS `firm`
+CREATE TABLE IF NOT EXISTS `attorney`
 (
-    `id`      BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    `name`    VARCHAR(255) NOT NULL,
-    `address` VARCHAR(255) NOT NULL
+    `id`                BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+    `full_name`         VARCHAR(255) NOT NULL,
+    `phone`             VARCHAR(30)  NOT NULL,
+    `firm_name`         VARCHAR(255),
+    `address`           VARCHAR(255),
+    `website`           VARCHAR(255),
+    `profile_photo_url` VARCHAR(255) NOT NULL,
+    `profile_url`       VARCHAR(255) NOT NULL
 )
     ENGINE = InnoDB
     AUTO_INCREMENT = 1;
 
 CREATE TABLE IF NOT EXISTS `section`
 (
-    `id`   BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(255) UNIQUE NOT NULL
+    `id`          BIGINT(20) ,
+    `attorney_id` BIGINT(20),
+    `name`        VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY (`attorney_id`) REFERENCES `attorney` (`id`) ON DELETE CASCADE,
+    PRIMARY KEY (`id`, `attorney_id`)
 )
-    ENGINE = InnoDB
-    AUTO_INCREMENT = 1;
+    ENGINE = InnoDB;
+
 
 CREATE TABLE IF NOT EXISTS `category`
 (
-    `id`   BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(255) UNIQUE NOT NULL
-)
-    ENGINE = InnoDB
-    AUTO_INCREMENT = 1;
+    `id`          BIGINT(20) ,
+    `attorney_id` BIGINT(20),
+    `name`        VARCHAR(255) NOT NULL,
 
-CREATE TABLE IF NOT EXISTS `attorney`
-(
-    `id`                BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    `full_name`         VARCHAR(255) NOT NULL,
-    `phone`             VARCHAR(30)  NOT NULL,
-    `education`         VARCHAR(255),
-    `firm_id`           BIGINT(20)  ,
-    `website`           VARCHAR(255) NOT NULL,
-    `profile_photo_url` VARCHAR(255) NOT NULL,
-    `profile_url`       VARCHAR(255) NOT NULL,
-
-    FOREIGN KEY (`id`) REFERENCES `firm` (`id`) ON DELETE CASCADE
-
-)
-    ENGINE = InnoDB
-    AUTO_INCREMENT = 1;
-
-CREATE TABLE IF NOT EXISTS `attorney_categories`
-(
-    `attorney_id` BIGINT NOT NULL,
-    `category_id` BIGINT NOT NULL,
-
-    PRIMARY KEY (`attorney_id`, `category_id`),
     FOREIGN KEY (`attorney_id`) REFERENCES `attorney` (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE
-
+    PRIMARY KEY (`id`, `attorney_id`)
 )
-    ENGINE = InnoDB
-    AUTO_INCREMENT = 1;
+    ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `attorney_sections`
+
+CREATE TABLE IF NOT EXISTS `education`
 (
-    `attorney_id` BIGINT NOT NULL,
-    `section_id`  BIGINT NOT NULL,
+    `id`          BIGINT(20) ,
+    `attorney_id` BIGINT(20),
+    `name`        VARCHAR(255) NOT NULL,
 
-    PRIMARY KEY (`attorney_id`, `section_id`),
     FOREIGN KEY (`attorney_id`) REFERENCES `attorney` (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`section_id`) REFERENCES `section` (`id`) ON DELETE CASCADE
+    PRIMARY KEY (`id`, `attorney_id`)
 )
-    ENGINE = InnoDB
-    AUTO_INCREMENT = 1;
-
+    ENGINE = InnoDB;

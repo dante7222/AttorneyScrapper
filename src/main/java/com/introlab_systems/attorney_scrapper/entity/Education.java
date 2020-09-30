@@ -6,13 +6,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "section")
+@Table(name = "education")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Section implements Serializable {
+public class Education implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -28,3 +28,4 @@ public class Section implements Serializable {
     private String name;
 
 }
+

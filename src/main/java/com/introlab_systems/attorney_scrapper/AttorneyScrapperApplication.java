@@ -1,7 +1,7 @@
 
 package com.introlab_systems.attorney_scrapper;
 
-import com.introlab_systems.attorney_scrapper.scratcher.AttorneyScrapper;
+import com.introlab_systems.attorney_scrapper.scrapper.AttorneyScrapper;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,7 +22,7 @@ public class AttorneyScrapperApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         AttorneyScrapper bean = applicationContext.getBean(AttorneyScrapper.class);
-        bean.saveAttorneys();
+        bean.saveAttorneys(1);
     }
 
     @Bean
