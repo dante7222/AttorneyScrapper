@@ -17,19 +17,17 @@ public class PageScrapper {
     public List<String> getPageAttorneysURL(int pageNumber) {
         Document document = null;
         try {
-            document = Jsoup.connect("https://intus.austinbar.org/directory/default.aspx?page=" + pageNumber).get();
+            document = Jsoup.connect(URL + pageNumber).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
         Elements container = document.getElementsByClass("row");
 
-        List<String> attorneysURIList = container.first()
+        return container.first()
                 .getElementsByClass("span3 col-sm-6 col-md-3 directory-search-item")
                 .stream()
                 .map(element -> element.getElementsByTag("a").attr("href")
                 .replaceFirst("/", DOMAIN))
                 .collect(Collectors.toList());
-
-        return attorneysURIList;
     }
 }
