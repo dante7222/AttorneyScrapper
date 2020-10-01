@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "section")
+@Table(name = "category")
 @Getter
 @Setter
 @NoArgsConstructor

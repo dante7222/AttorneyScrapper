@@ -1,10 +1,10 @@
-package com.introlab_systems.attorney_scrapper.scrapper;
+package com.introlab_systems.attorney_scrapper.parser;
 
 import com.introlab_systems.attorney_scrapper.entity.Attorney;
 import com.introlab_systems.attorney_scrapper.entity.Category;
 import com.introlab_systems.attorney_scrapper.entity.Education;
 import com.introlab_systems.attorney_scrapper.entity.Section;
-import com.introlab_systems.attorney_scrapper.service.AttorneyService;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -12,10 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
-public class AttorneyScrapper {
+public class AttorneyParser {
     private static final String DOMAIN = "https://intus.austinbar.org/";
     private static final String WEBSITE_SELECTOR = ".form-group:has(label:contains(Website))";
     private static final String NAME_SELECTOR = ".form-group:has(label:contains(Name))";
@@ -27,45 +26,31 @@ public class AttorneyScrapper {
     private static final String PHONE_SELECTOR = ".form-group:has(label:contains(Phone))";
 
 
-    private PageScrapper pageScrapper;
-    private AttorneyService attorneyService;
-
-
-    public AttorneyScrapper(PageScrapper pageScrapper, AttorneyService attorneyService) {
-        this.pageScrapper = pageScrapper;
-        this.attorneyService = attorneyService;
-    }
-
-    /*public List<String> getAttorneysProfileLink(int pageNumber) {
-        final List<String> pageAttorneysURI = pageScrapper.getPageAttorneysURI(pageNumber);
-
-        final List<String> collect = pageAttorneysURI.stream()
-                .map(uri -> uri.replaceFirst("/", DOMAIN))
-                .collect(Collectors.toList());
-
-        return collect;
-    }*/
-
-    public void saveAttorneys(int pageNumber) {
-        List<String> attorneysProfileLink = pageScrapper.getPageAttorneysURL(pageNumber);
-
+    public Attorney getAttorneyObject(String profileURL) {
         Document document = null;
         try {
-            document = Jsoup.connect("https://intus.austinbar.org/directory/details/?id=816566").get();
+            document = Jsoup.connect(profileURL).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        String profilePhotoURL = document.select("img").attr("src").replaceFirst("/", DOMAIN);
+        String profilePhotoURL = document.select("img")
+                .attr("src")
+                .replaceFirst("/", DOMAIN);
 
         Attorney attorney = new Attorney();
         attorney.setProfile_photo_url(profilePhotoURL);
-        attorney.setProfile_url(attorneysProfileLink.get(2));
-        attorney.setFirm_name(document.select(FIRM_SELECTOR).text());
-        attorney.setFullName(document.select(NAME_SELECTOR).text());
-        attorney.setAddress(document.select(ADDRESS_SELECTOR).text());
-        attorney.setPhone(document.select(PHONE_SELECTOR).text());
-        attorney.setWebsite(document.select(WEBSITE_SELECTOR).text());
+        attorney.setProfile_url(profileURL);
+        attorney.setFirm_name(StringUtils.remove(
+                document.select(FIRM_SELECTOR).text(), "Firm"));
+        attorney.setFullName(StringUtils.remove(
+                document.select(NAME_SELECTOR).text(), "Name"));
+        attorney.setAddress(StringUtils.remove(
+                document.select(ADDRESS_SELECTOR).text(), "Address"));
+        attorney.setPhone(StringUtils.remove(
+                document.select(PHONE_SELECTOR).text(), "Phone"));
+        attorney.setWebsite(StringUtils.remove(
+                document.select(WEBSITE_SELECTOR).text(), "Website"));
 
 
         Elements education = document.select(EDUCATION_SELECTOR);
@@ -73,7 +58,7 @@ public class AttorneyScrapper {
             attorney.setEducations(new ArrayList<>());
 
             for (int i = 0; i < education.size(); i++) {
-                attorney.getEducations().add(new Education((long) i, attorney, education.get(i).text()));
+                attorney.getEducations().add(new Education((long) i + 1, attorney, education.get(i).text()));
             }
         }
 
@@ -82,7 +67,8 @@ public class AttorneyScrapper {
             attorney.setSections(new ArrayList<>());
 
             for (int i = 0; i < sections.size(); i++) {
-                attorney.getSections().add(new Section((long) i, attorney, sections.get(i).text()));
+                System.out.println("HELLLOOOOOOOOOO!!!!!");
+                attorney.getSections().add(new Section((long) i + 1, attorney, sections.get(i).text()));
             }
         }
 
@@ -91,11 +77,9 @@ public class AttorneyScrapper {
             attorney.setCategories(new ArrayList<>());
 
             for (int i = 0; i < catergories.size(); i++) {
-                attorney.getCategories().add(new Category((long) i, attorney, catergories.get(i).text()));
+                attorney.getCategories().add(new Category((long) i + 1, attorney, catergories.get(i).text()));
             }
         }
-
-        attorneyService.save(attorney);
-
+        return attorney;
     }
 }
