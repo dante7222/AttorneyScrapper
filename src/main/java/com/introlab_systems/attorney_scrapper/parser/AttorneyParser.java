@@ -67,7 +67,6 @@ public class AttorneyParser {
             attorney.setSections(new ArrayList<>());
 
             for (int i = 0; i < sections.size(); i++) {
-                System.out.println("HELLLOOOOOOOOOO!!!!!");
                 attorney.getSections().add(new Section((long) i + 1, attorney, sections.get(i).text()));
             }
         }
